@@ -27,18 +27,23 @@ def get_photo(client_id,client_secret, user_agent, username,password,subreddit, 
                 file.close()
 
 #               Get the quote
-def get_quote(quotesfile):
-    today = date.today() 
-    day_of_year = today.strftime('%j')
+def get_quote():
+    # today = date.today() 
+    # day_of_year = today.strftime('%j')
     
-    print("\nDay of year: ", day_of_year, "\n")
+    # print("\nDay of year: ", day_of_year, "\n")
     
-    with open(quotesfile, "r", encoding="utf-8") as file:
-        allquotes = file.read()
-        quotes = allquotes.split("_***_\n")
-        quote = quotes[int(day_of_year)]
+    # with open(quotesfile, "r", encoding="utf-8") as file:
+    #     allquotes = file.read()
+    #     quotes = allquotes.split("_***_\n")
+    #     quote = quotes[int(day_of_year)]
     
-    quote = quote.replace("-----", " ")
+    # quote = quote.replace("-----", " ")
+    
+    quote = input("Enter Quote: ")
+    
+    
+    
     return quote
 
         #   Splits the quote in 2
@@ -70,96 +75,86 @@ def split_quote(quote):
 
 
 
-
-#               Get the Music
-
-def get_music(music):
-    print(len(music))
-    n = random.randrange(0,len(music))
-    music_path = "music\\" + music[n]
-    audio = AudioFileClip(music_path)
-    if n == 0:
-        audio = audio.subclip(8, 63)
-    elif n == 1:
-        audio = audio.subclip(13, 73)
-    elif n == 2:
-        audio = audio.subclip(22, 82)
-    elif n == 3:
-        audio = audio.subclip(10, 69)
-    elif n == 4:
-        audio = audio.subclip(126, 186)
-    elif n == 5:
-        audio = audio.subclip(12, 72)
-    return audio
-
-
 #               Merge Video
 
-def merge_video(fps, duration,image, quote1,quote2,audio):
-    clip = ImageClip(image).set_duration(duration).set_fps(fps)
-
-    rez_clip = CompositeVideoClip([clip], size=(1080,1920))
+def merge_video(fps, duration,image, quote1,quote2):
+    # make sure the image is in 1080x1920 resolution
+    clip = ImageClip(image).set_duration(duration).set_fps(fps).set_pos("center")
+    
+    
+    rez_clip = CompositeVideoClip([clip], size=(1080,1920), )
     rez_clip = rez_clip.resize(lambda t: 1 + 0.04 * t)  # Zoom-in effect
 
+
+# timing the effect
     rez_clip1 = rez_clip.subclip(0,duration/2)
     rez_clip2 = rez_clip.subclip(duration/2,duration)
 
 
-
-    bg_color = ColorClip(size=(1080,1920),color=(0,0,0)).set_duration(duration)
-    bg_color = bg_color.set_opacity(0.3)
-
-    text1 = TextClip(quote1,fontsize=64, font="Powerr", color="White").set_duration(duration/2)
-    text2 = TextClip(quote2,fontsize=64, font="Powerr", color="White").set_duration(duration/2)
-
-
-    color1 = ColorClip(size=(int(text1.w*1.1), int(text1.h*1.5)), color=(0, 0, 0)).set_duration(duration/2)
-    color1 = color1.set_opacity(0.4)
-    color1 = color1.set_position("center")
-
-    color2 = ColorClip(size=(int(text2.w*1.1), int(text2.h*1.5)), color=(0, 0, 0)).set_duration(duration/2)
-    color2 = color2.set_opacity(0.4)
-    color2 = color2.set_position("center")
-
+# the text clips
+# Text 1
+    text1 = TextClip(quote1,fontsize=64, font="Arial Bold", color="White").set_duration(duration/2)
     text1 = text1.set_position("center")
+# Text 2   
+    text2 = TextClip(quote2,fontsize=64, font="Arial Bold", color="White").set_duration(duration/2)
     text2 = text2.set_position("center")
 
-    subtitle1 = CompositeVideoClip([bg_color,color1,text1])
-    subtitle1 = subtitle1.set_position("center")
 
+# the background for the texts
+# Text 1 Background
+    color1 = ColorClip(size=(int(text1.w*1.1), int(text1.h*1.5)), color=(0, 0, 0)).set_duration(duration/2)
+    color1 = color1.set_opacity(1)
+    color1 = color1.set_position("center")
+    color1 = color1.margin(left=10, right=10, top=10, bottom=10, color=(255, 255, 0))
+
+# Text 2 Background   
+    color2 = ColorClip(size=(int(text2.w*1.1), int(text2.h*1.5)), color=(0, 0, 0)).set_duration(duration/2)
+    color2 = color2.set_opacity(1)
+    color2 = color2.set_position("center")
+    color2 = color2.margin(left=10, right=10, top=10, bottom=10, color=(255, 255, 0))
+    
+
+# Subtitle = Background + Text
+# Sub 1
+    subtitle1 = CompositeVideoClip([color1,text1])
+    subtitle1 = subtitle1.set_position("center")
+# Sub 2
     subtitle2 = CompositeVideoClip([color2,text2])
     subtitle2 = subtitle2.set_position("center")
 
-
-
+# Subtitle + Image
+#1
     subtitle_clip1 = CompositeVideoClip([rez_clip1,subtitle1], size=(1080,1920)).set_duration(duration/2)
+#2
     subtitle_clip2 = CompositeVideoClip([rez_clip2,subtitle2], size=(1080,1920)).set_duration(duration/2)
+    
+# Final Video
     video_clip = concatenate_videoclips([subtitle_clip1,subtitle_clip2]).set_duration(duration)
-    video_clip = video_clip.set_audio(audio).set_duration(duration)
+    video_clip = video_clip.set_duration(duration)
 
-    video_clip.write_videofile("visual/output.mp4", fps=fps)
+# Export the video
+    video_clip.write_videofile("visual/output.mp4", fps=fps, codec='h264_nvenc', threads=12, preset="fast", )
+
+
+
+
 
 if __name__ == "__main__":
-    #           Pesonal Reddit Info
-    client_id = ""
-    client_secret = ""
-    user_agent = ""
-    username = ""
-    password = ""
 
-    music = ["metamorphosis(sped up).mp3", "Demons In My Soul.mp3", "Kosandra.mp3", "Mask Off.mp3", "experience _ ludovico einaudi.mp3", "Polozenie.mp3"]
     photoname = "visual/bgImg.jpg"
-    quotespath = "quotes.txt"
+    
+    content = get_quote()
+    
 
-    duration = len(get_quote(quotespath).split(" "))/180 * 60
+    duration = len(content.split(" "))/180 * 60
     if duration < 10:
         duration = 10
     print(duration)
 
-    get_photo(client_id, client_secret, user_agent, username, password, "EarthPorn", photoname)
-    quote1, quote2 = split_quote(get_quote(quotespath))
-    audio = get_music(music)
+    # get_photo(client_id, client_secret, user_agent, username, password, "EarthPorn", photoname)
+    quote1, quote2 = split_quote(content)
+    # audio = get_music(music)
 
-    merge_video(60, duration, photoname, quote1, quote2, audio)
+    merge_video(75, duration, photoname, quote1, quote2)
     
  
