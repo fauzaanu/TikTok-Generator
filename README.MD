@@ -4,32 +4,34 @@ This was a fork from https://github.com/gen1s/TikTok-Generator but I decided to 
 
 ## Design Ideas
 
-1. Not fully automation ✅
-
-   Semi automation is the way. If something slips through me regarding the content in a video my account will be at risk.
-
-2. Let the user choose the music ✅
-
-   Video creation is a hassle. But finding a cool music is not. Its a fun part of the tiktok process. So lets do it manually.
-
-3. Lets also ditch reddit. ✅
-
-   Why should this very simple piece of python code rely on reddit api. We can use much better ways to get the images. Some ideas are to have a collection of images locally.
-
-   We can also integrate this into an AI based service like midjourney. That would be so cool. But midjourney doesnt have an API but maybe there are other services that does.
-
-4. Quotes? too main stream no? ✅
-
-   Lets create the content ourselves. Lets ask the user what the content is instead looking up some quotes table
+- Semi Automation
+- Image generation should be better than grabbing reddit pics
+- Initial repo was targeting quotes but lets make it dynamic for just any content
 
 ## INSTALLATION
 
-- You need ImageMigick Installed
-- do a requirements.txt
+- You need ImageMigick Installed : https://imagemagick.org/
+- py -m virtualenv venv
+- Windows: venv/scripts/activate
+- Linux : source venv/bin/activate
+- pip install -r requirements.txt
 
-# Beyond the simple tool it was
+Your good to go ✅
+
+# CURRENT FEATURES
 
 - ✅ color contrast - going for a popular text style on tiktok already!
-- TBA : Image generation
+- 🤔 TBA : Image generation
 - ✅ Word by word tiktok
-- ✅ Dynamic now: add as many sentences as you like. Sometimes there are bugs and some screens are not added. but most of the time it comes through fine. This bug was also seen before when the timing is not a whole number but it has been fixed. Could still try if it is consistently failing to go back to 1 second per word and later speeding up the whole video. (dirty fix)
+- ✅ Dynamic now: add as many sentences as you like.
+
+# USAGE
+
+- run py main.py
+- when prompted enter content and it will do the rest
+- Slow speeds cannot be helped,
+  to counter this speed disadvantage this tool is aiming to make the content look authentic and not like the rest of the automated generators
+
+# CONTRIBUTION
+
+If anyone is interested in contributing contact me on twitter @fauzaanu
