@@ -26,3 +26,10 @@ This was a fork from https://github.com/gen1s/TikTok-Generator but I decided to 
 
 - You need ImageMigick Installed
 - do a requirements.txt
+
+# Beyond the simple tool it was
+
+- ✅ color contrast - going for a popular text style on tiktok already!
+- TBA : Image generation
+- ✅ Word by word tiktok
+- ✅ Dynamic now: add as many sentences as you like. Sometimes there are bugs and some screens are not added. but most of the time it comes through fine. This bug was also seen before when the timing is not a whole number but it has been fixed. Could still try if it is consistently failing to go back to 1 second per word and later speeding up the whole video. (dirty fix)
